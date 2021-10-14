@@ -57,7 +57,6 @@ const Signup = () => {
 			email,
 			mobileNumber,
 		};
-		console.log(data);
 
 		const registerStatus = await axios.post("http://localhost:4000/signup", data).then((res) => res.status);
 		if (registerStatus === 200) {

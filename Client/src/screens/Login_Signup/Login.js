@@ -5,7 +5,7 @@ import axios from "axios";
 import Message from "../../components/Message";
 import Error from "../../components/Error";
 
-const Login = () => {
+const Login = (props) => {
 	const [userName, setuserName] = useState("");
 	const [password, setpassword] = useState("");
 	const [error, seterror] = useState(false);
@@ -23,13 +23,11 @@ const Login = () => {
 			userName: userName,
 			password: password,
 		};
-		console.log(data);
 		const loginResult = await axios
 			.post("http://localhost:4000/login", data, {
 				withCredentials: true,
 			})
 			.then((res) => {
-				console.log(res);
 				return res.data;
 			});
 		if (loginResult.status !== 200) {
@@ -40,6 +38,7 @@ const Login = () => {
 			setmsg(loginResult.message);
 			seterror(false);
 			setloginSuccess(true);
+			props.history.push("/dashboard")
 		}
 	};
 

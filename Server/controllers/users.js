@@ -64,7 +64,49 @@ const login = (req, res, next) => {
 };
 
 const allusers = (req, res, next) => {
-	users.find((err, data) => (err ? res.status(400).send("Error occured") : res.json(data)));
+	const clientToken = req.cookies.clientToken;
+	if (clientToken) {
+		jwt.verify(clientToken, "UmaMahesh", (err, decodedToken) => {
+			if (err) {
+				res.status(204).send(err.message);
+			} else {
+				users
+					.find(
+						{},
+						{
+							userName: 1,
+							email: 1,
+							mobileNumber: 1,
+						}
+					)
+					.exec((err, data) => {
+						if (err) {
+							res.status(400).send("Error occured");
+						} else {
+							res.json({ data, user: decodedToken.userName });
+						}
+					});
+			}
+		});
+	} else {
+		res.status(204).send("Please Login");
+	}
+	// users
+	// 	.find(
+	// 		{},
+	// 		{
+	// 			userName: 1,
+	// 			email: 1,
+	// 			mobileNumber: 1,
+	// 		}
+	// 	)
+	// 	.exec((err, data) => {
+	// 		if (err) {
+	// 			res.status(400).send("Error occured");
+	// 		} else {
+	// 			res.json(data);
+	// 		}
+	// 	});
 };
 
 const validateUserName = (req, res, next) => {
